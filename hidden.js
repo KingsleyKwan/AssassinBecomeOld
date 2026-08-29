@@ -113,41 +113,57 @@ function hiddenStage() {
   function paintChoices() {
     let answered = false;
     let t0 = performance.now();
-    const truthMs = 2800, truthLen = 1100;
+    const limitMs = 7500;
+    const truthDur = 1600;
+    const truthAt = 1600 + Math.random() * 2800;
+    let truthShown = false;
     app.innerHTML = `
       <div class="screen" id="hs" style="background:#120e0c">
         <p class="kicker">隱藏關 · 後巷尾</p>
         <p class="muted" style="margin-top:.7rem">Yeesa「……好多謝你。」</p>
-        <p class="muted" style="margin-top:.45rem">佢等你講句嘢。</p>
+        <p class="muted" style="margin-top:.45rem">限時內作出適當反應。</p>
+        <div class="timer" style="margin:1rem 0 0;width:100%"><i id="tbar"></i></div>
         <div id="said" style="margin-top:.8rem;min-height:2.4em"></div>
         <div class="grow"></div>
-        <div id="zone" style="position:relative;height:48vh"></div>
+        <div id="zone" style="position:relative;height:44vh"></div>
       </div>`;
     const zone = app.querySelector("#zone");
     const said = app.querySelector("#said");
+    const tbar = app.querySelector("#tbar");
     function addBtn(label, kind, life) {
       if (answered) return;
       const p = pos();
       const b = document.createElement("button");
       b.className = "qte" + (kind==="truth"?" perfect":"");
+      b.dataset.kind = kind;
       b.textContent = label;
       const w = kind==="truth" ? 200 : Math.min(240, 28+label.length*18);
       b.style.cssText = `left:${p.x}%;top:${p.y}%;width:${w}px;height:48px;border-radius:14px;font-size:.82rem`;
       b.onclick = (e) => { e.stopPropagation(); pick(kind, label); };
       zone.appendChild(b);
-      setTimeout(() => { if (!answered) b.remove(); }, life);
+      setTimeout(() => { if (!answered && b.parentNode) b.remove(); }, life);
     }
     function cycle() {
       if (answered) return;
-      addBtn(wrongA[Math.floor(Math.random()*wrongA.length)], "slap", 2200);
-      setTimeout(() => { if (!answered) addBtn(wrongB[Math.floor(Math.random()*wrongB.length)], "lame", 2400); }, 700);
+      addBtn(wrongA[Math.floor(Math.random()*wrongA.length)], "slap", 1800);
+      setTimeout(() => { if (!answered) addBtn(wrongB[Math.floor(Math.random()*wrongB.length)], "lame", 1800); }, 500);
     }
     cycle();
-    const iv = setInterval(() => { if (!answered) cycle(); else clearInterval(iv); }, 2600);
+    const iv = setInterval(() => { if (!answered) cycle(); else clearInterval(iv); }, 2200);
     function tick(now) {
       if (answered) return;
       const el = now - t0;
-      if (el >= truthMs && el < truthMs+truthLen && !zone.querySelector(".perfect")) addBtn(truth, "truth", truthLen);
+      tbar.style.transform = "scaleX(" + Math.max(0, 1 - el/limitMs) + ")";
+      if (!truthShown && el >= truthAt) {
+        truthShown = true;
+        addBtn(truth, "truth", Math.min(truthDur, limitMs - el - 80));
+      }
+      if (el >= limitMs) {
+        answered = true;
+        clearInterval(iv);
+        showResult("timeout", "");
+        return;
+      }
       requestAnimationFrame(tick);
     }
     requestAnimationFrame(tick);
@@ -159,6 +175,18 @@ function hiddenStage() {
       setTimeout(() => showResult(kind, label), 650);
     }
     function showResult(kind, label) {
+      if (kind === "timeout") {
+        app.innerHTML = `<div class="screen" style="background:#161310">
+          <p class="kicker">過時</p>
+          <h2 style="margin:1rem 0 .4rem">唔講得切</h2>
+          <p class="muted">Yeesa 望住你一陣，然後轉身。</p>
+          <p class="muted" style="margin-top:1rem">隱藏關未解鎖。</p>
+          <div class="grow"></div>
+          <button class="btn solid" id="next">下一關</button>
+        </div>`;
+        app.querySelector("#next").onclick = () => leaveHiddenWithoutMeet();
+        return;
+      }
       if (kind === "slap" || kind === "lame") {
         const slap = kind === "slap";
         app.innerHTML = `<div class="screen ${slap?"slapped":""}" style="background:${slap?"#2a1010":"#161310"}">
