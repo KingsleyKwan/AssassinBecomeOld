@@ -81,7 +81,7 @@ function advance() {
 
 function hiddenStage() {
   const lines = [
-    { who: "嘉敏", text: "……好多謝你。" },
+    { who: "Yeesa", text: "……好多謝你。" },
     { who: "", text: "後巷好靜。佢望住你。" },
   ];
   let i = 0;
@@ -146,7 +146,7 @@ function hiddenStage() {
       if (kind === "slap") {
         app.innerHTML = `<div class="screen slapped" style="background:#2a1010">
           <p class="kicker">拍</p><h2 style="margin:1rem 0">一巴掌</h2>
-          <p class="muted">學生妹一拍車落塊面度。</p>
+          <p class="muted">Yeesa 一拍車落塊面度。</p>
           <div class="grow"></div>
           <button class="btn solid" id="again">再試</button>
         </div>`;
@@ -157,7 +157,7 @@ function hiddenStage() {
       if (kind === "lame") {
         app.innerHTML = `<div class="screen" style="background:#161310">
           <p class="kicker">……</p><h2 style="margin:1rem 0">無奈</h2>
-          <p class="muted">嘉敏嘴拉實，眼神避開。好無奈。</p>
+          <p class="muted">Yeesa 嘴拉實，眼神避開。好無奈。</p>
           <div class="grow"></div>
           <button class="btn solid" id="again">再試</button>
         </div>`;
@@ -174,8 +174,8 @@ function hiddenStage() {
       write(save);
       app.innerHTML = `<div class="screen" style="background:#120e0c">
         <p class="kicker">後巷尾</p>
-        <h2 style="margin:1rem 0">嘉敏</h2>
-        <p class="muted">「……我叫嘉敏。」</p>
+        <h2 style="margin:1rem 0">Yeesa</h2>
+        <p class="muted">「……我叫 Yeesa。」</p>
         <p class="muted" style="margin-top:1rem">佢記住你個名。隱藏關已解鎖。If「識到學生女」已開。</p>
         <div class="grow"></div>
         <div class="stack">
