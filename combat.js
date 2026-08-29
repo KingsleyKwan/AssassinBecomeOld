@@ -128,16 +128,12 @@ function startCombat() {
     const w = app.clientWidth, h = app.clientHeight;
     ctx.clearRect(0,0,w,h);
     ctx.fillStyle = "#0c0b0a"; ctx.fillRect(0,0,w,h);
-    ctx.fillStyle = "#1a1512"; ctx.fillRect(0,h*.62,w,h*.4);
-    ctx.fillStyle = "#2a2220"; ctx.fillRect(w*.08, h*.28, w*.18, h*.36);
-    ctx.fillStyle = `rgba(180,40,60,${.15+Math.sin(st.clock)*.04})`;
-    ctx.fillRect(w*.7, h*.18, w*.22, h*.12);
+    if (typeof drawCover === "function") drawCover(ctx, bgFor(c.id), w, h);
 
     const ea = st.phase==="approach" ? Math.min(1, st.t/(c.windupMs/1000)) : (st.outcome==="win"?Math.max(0,1-st.t):1);
-    ctx.globalAlpha = ea;
-    ctx.fillStyle = "#1c1a18"; ctx.fillRect(w*.12, h*.38, w*.16, h*.36);
-    ctx.fillStyle = "#2a2420"; ctx.beginPath(); ctx.arc(w*.2, h*.36, 18, 0, Math.PI*2); ctx.fill();
-    ctx.globalAlpha = 1;
+    ctx.save(); ctx.globalAlpha = ea;
+    if (typeof drawContain === "function") drawContain(ctx, enemyFor(c.weapon), w*0.08, h*0.22, w*0.38, h*0.62);
+    ctx.restore();
 
     if (st.phase === "approach") {
       const p = Math.min(1, st.t/(c.windupMs/1000));
@@ -158,18 +154,10 @@ function startCombat() {
     }
 
     if (st.phase === "qte" || (st.phase==="approach" && c.weapon!=="gun") || st.phase==="resolveHit") {
-      ctx.save(); ctx.translate(w*.5, h*.48);
       const s = st.threat;
-      if (c.weapon === "gun") {
-        ctx.fillStyle = "#c4a46a"; ctx.beginPath(); ctx.ellipse(0,0, 18*s, 18*s, 0, 0, Math.PI*2); ctx.fill();
-        ctx.fillStyle = "#8a6a3a"; ctx.beginPath(); ctx.arc(0,0, 7*s, 0, Math.PI*2); ctx.fill();
-      } else if (c.weapon === "knife") {
-        ctx.rotate(-.4); ctx.fillStyle = "#d8d2c8";
-        ctx.beginPath(); ctx.moveTo(-10*s,-70*s); ctx.lineTo(10*s,-70*s); ctx.lineTo(2*s,80*s); ctx.lineTo(-2*s,80*s); ctx.fill();
-      } else {
-        ctx.fillStyle = "#c49a72"; ctx.beginPath(); ctx.ellipse(0,10*s, 34*s, 28*s, 0, 0, Math.PI*2); ctx.fill();
-      }
-      ctx.restore();
+      const tw = (c.weapon === "gun" ? 90 : c.weapon === "knife" ? 70 : 160) * s;
+      const th = (c.weapon === "gun" ? 90 : c.weapon === "knife" ? 220 : 160) * s;
+      if (typeof drawContain === "function") drawContain(ctx, threatFor(c.weapon), w*0.5 - tw/2, h*0.38 - th/2, tw, th);
     }
 
     if (st.flash>0) { ctx.fillStyle = `rgba(243,236,224,${st.flash*.5})`; ctx.fillRect(0,0,w,h); }
