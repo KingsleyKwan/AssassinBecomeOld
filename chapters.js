@@ -12,9 +12,9 @@ const CHAPTERS = [
     id: 2, numeral: "二", title: "入行", subtitle: "刀", weapon: "knife",
     enemyCount: 3, blocksToKill: 3, onlyPerfect: false, blockLabel: "擋",
     windupMs: 800, hitMs: 1500, perfectStartMs: 860, perfectEndMs: 1240, buttonPx: 104,
-    intro: ["上次件事，有個殺手組織嘅人見到。", "佢哋話：「你注定做呢行。」", "第一晚出糧。倉庫入面三把刀。"],
-    resolve: "倉庫三把刀。你逐個放低三個人。組織收咗你。",
-    resolveIf: "三個人倒下。你返到街上先想起後巷個 Yeesa。刀比拳頭快，人已經唔嗮度。",
+    intro: ["上次件事，有個殺手組織嘅人見到。", "佢哋話：「你注定做呢行。」", "第一單。毒品倉庫。三隻持刀看門狗。"],
+    resolve: ["搞掂三隻狗。入到去無毒品。", "有個白西裝 All back 男人坐咗嚟度。", "佢同你講：「你！跟我搵食！」"],
+    resolveIf: ["搞掂三隻狗。入到去無毒品。", "有個白西裝 All back 男人坐咗嚟度。", "佢同你講：「你！跟我搵食！」", "你忽然想起後巷個 Yeesa。"],
   },
   {
     id: 3, numeral: "三", title: "任務", subtitle: "槍 · 殺手", weapon: "gun",
