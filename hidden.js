@@ -117,11 +117,14 @@ function hiddenStage() {
     app.innerHTML = `
       <div class="screen" id="hs" style="background:#120e0c">
         <p class="kicker">隱藏關 · 後巷尾</p>
-        <p class="muted" style="margin-top:1rem">佢等你講句嘢。</p>
+        <p class="muted" style="margin-top:.7rem">Yeesa「……好多謝你。」</p>
+        <p class="muted" style="margin-top:.45rem">佢等你講句嘢。</p>
+        <div id="said" style="margin-top:.8rem;min-height:2.4em"></div>
         <div class="grow"></div>
-        <div id="zone" style="position:relative;height:55vh"></div>
+        <div id="zone" style="position:relative;height:48vh"></div>
       </div>`;
     const zone = app.querySelector("#zone");
+    const said = app.querySelector("#said");
     function addBtn(label, kind, life) {
       if (answered) return;
       const p = pos();
@@ -130,9 +133,9 @@ function hiddenStage() {
       b.textContent = label;
       const w = kind==="truth" ? 200 : Math.min(240, 28+label.length*18);
       b.style.cssText = `left:${p.x}%;top:${p.y}%;width:${w}px;height:48px;border-radius:14px;font-size:.82rem`;
-      b.onclick = (e) => { e.stopPropagation(); pick(kind); };
+      b.onclick = (e) => { e.stopPropagation(); pick(kind, label); };
       zone.appendChild(b);
-      setTimeout(() => b.remove(), life);
+      setTimeout(() => { if (!answered) b.remove(); }, life);
     }
     function cycle() {
       if (answered) return;
@@ -148,14 +151,20 @@ function hiddenStage() {
       requestAnimationFrame(tick);
     }
     requestAnimationFrame(tick);
-    function pick(kind) {
+    function pick(kind, label) {
       answered = true;
       clearInterval(iv);
+      said.innerHTML = `<p style="color:#f3ece0;letter-spacing:.12em;font-size:1.05rem">你「${label}」</p>`;
+      zone.querySelectorAll("button").forEach((b) => { if (b.textContent !== label) b.remove(); });
+      setTimeout(() => showResult(kind, label), 650);
+    }
+    function showResult(kind, label) {
       if (kind === "slap" || kind === "lame") {
         const slap = kind === "slap";
         app.innerHTML = `<div class="screen ${slap?"slapped":""}" style="background:${slap?"#2a1010":"#161310"}">
           <p class="kicker">${slap?"拍":"……"}</p>
-          <h2 style="margin:1rem 0">${slap?"一巴掌":"無奈"}</h2>
+          <p class="muted" style="margin-top:1rem">Yeesa「……好多謝你。」</p>
+          <h2 style="margin:.8rem 0 .4rem">你「${label}」</h2>
           <p class="muted">${slap?"Yeesa 一拍車落塊面度。":"Yeesa 嘴拉實，眼神避開。好無奈。"}</p>
           <p class="muted" style="margin-top:1rem">你行開。隱藏關未解鎖。</p>
           <div class="grow"></div>
@@ -175,8 +184,9 @@ function hiddenStage() {
       write(save);
       app.innerHTML = `<div class="screen" style="background:#120e0c">
         <p class="kicker">後巷尾</p>
-        <h2 style="margin:1rem 0">Yeesa</h2>
-        <p class="muted">「……我叫 Yeesa。」</p>
+        <p class="muted" style="margin-top:1rem">Yeesa「……好多謝你。」</p>
+        <h2 style="margin:.8rem 0 .4rem">你「${label}」</h2>
+        <p class="muted">Yeesa「……我叫 Yeesa。」</p>
         <p class="muted" style="margin-top:1rem">佢記住你個名。隱藏關已解鎖。If「識到學生女」已開。</p>
         <div class="grow"></div>
         <div class="stack">
