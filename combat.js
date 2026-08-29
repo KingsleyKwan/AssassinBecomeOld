@@ -1,5 +1,5 @@
-function startCombat() {
-  const c = ch();
+function startCombat(spec) {
+  const c = spec || ch();
   app.innerHTML = `<canvas id="cv"></canvas><div class="hud" id="hud"></div><div class="grain"></div>`;
   const canvas = app.querySelector("#cv");
   const ctx = canvas.getContext("2d");
@@ -7,7 +7,7 @@ function startCombat() {
   const st = {
     phase: "approach", t: 0, clock: 0, enemyIndex: 0, blocks: 0,
     threat: 0.2, flash: 0, flashRed: 0, wound: 0, outcome: null,
-    qte: null, last: performance.now(), usedPerfect: false
+    qte: null, last: performance.now(), usedPerfect: false, kills: []
   };
   combat = st;
 
@@ -38,11 +38,13 @@ function startCombat() {
     else if (kind === "miss") { st.flashRed = 1; st.wound = 1; audio.beep(70, .35, "sawtooth", .18); }
     else audio.beep(220, .12, "square", .1);
     if (kind === "perfect") {
+      st.kills.push("perfect");
       st.enemyIndex++; st.blocks = 0;
       if (st.enemyIndex >= c.enemyCount) st.outcome = "win";
     } else if (kind === "block") {
       st.blocks++;
       if (st.blocks >= c.blocksToKill) {
+        st.kills.push("block");
         st.enemyIndex++; st.blocks = 0;
         if (st.enemyIndex >= c.enemyCount) st.outcome = "win";
       }
@@ -72,7 +74,7 @@ function startCombat() {
     const pips = Array.from({length:c.enemyCount}, (_,i) => `<i style="display:inline-block;width:6px;height:6px;border-radius:50%;margin-left:4px;background:${i<st.enemyIndex?"#8a2424":i===st.enemyIndex?"#f3ece0":"#3a3530"}"></i>`).join("");
     hud.innerHTML = `
       <div style="position:absolute;left:1rem;top:max(1rem,env(safe-area-inset-top))">
-        <p class="kicker">第${c.numeral}關</p><p>${c.title}</p>
+        <p class="kicker">${spec?"隱藏關":"第"+c.numeral+"關"}</p><p>${c.title}</p>
       </div>
       <div style="position:absolute;right:1rem;top:max(1rem,env(safe-area-inset-top));text-align:right">${pips}<br>
         <button class="btn" style="width:auto;padding:0 .6rem;margin-top:.4rem;height:36px" id="quit">離開</button>
@@ -93,7 +95,7 @@ function startCombat() {
       else tap("miss");
     };
     const retry = hud.querySelector("#retry");
-    if (retry) retry.onclick = () => { screen="combat"; render(); };
+    if (retry) retry.onclick = () => { screen = spec ? "hidden2bcombat" : "combat"; render(); };
     const leave = hud.querySelector("#leave");
     if (leave) leave.onclick = () => { screen="title"; render(); };
   }
@@ -132,7 +134,7 @@ function startCombat() {
 
     const ea = st.phase==="approach" ? Math.min(1, st.t/(c.windupMs/1000)) : (st.outcome==="win"?Math.max(0,1-st.t):1);
     ctx.save(); ctx.globalAlpha = ea;
-    if (typeof drawContain === "function") drawContain(ctx, enemyFor(c.weapon), w*0.08, h*0.22, w*0.38, h*0.62);
+    if (typeof drawContain === "function") drawContain(ctx, enemyFor(c.weapon, st.enemyIndex, spec || c), w*0.08, h*0.22, w*0.38, h*0.62);
     ctx.restore();
 
     if (st.phase === "approach") {
@@ -149,7 +151,8 @@ function startCombat() {
       st.flashRed = Math.max(0, st.flashRed-dt*1.6);
       if (st.t > .55) {
         if (st.outcome === "win") {
-          lastRun = { chapterId: c.id, usedPerfect: st.usedPerfect };
+          if (spec && spec.onWin) { ro.disconnect(); spec.onWin(st); return; }
+          lastRun = { chapterId: c.id, usedPerfect: st.usedPerfect, kills: st.kills.slice() };
           storyMode = "outro"; screen = "story"; ro.disconnect(); render(); return;
         }
         if (st.outcome !== "lose") beginApproach();
@@ -173,6 +176,16 @@ function startCombat() {
   }
   paintHud();
   raf = requestAnimationFrame(loop);
+}
+
+function startHidden2BCombat() {
+  startCombat({
+    id: 21, numeral: "隱", title: "C", weapon: "knife",
+    enemyCount: 1, blocksToKill: 3, onlyPerfect: false, blockLabel: "擋",
+    windupMs: 720, hitMs: 1280, perfectStartMs: 720, perfectEndMs: 1080, buttonPx: 100,
+    female: true,
+    onWin(st) { finishHidden2B(!!st.usedPerfect); }
+  });
 }
 
 function startHidden2Combat() {
@@ -284,24 +297,23 @@ function startHidden2Combat() {
     const retry = hud.querySelector("#retry");
     if (retry) retry.onclick = () => { screen="hidden2combat"; render(); };
     const leave = hud.querySelector("#leave");
-    if (leave) leave.onclick = () => { markCompletedOnlyCh2(); screen="title"; render(); };
-  }
-
-  function markCompletedOnlyCh2() {
-    const completed = save.completed.includes(2) ? save.completed : [...save.completed, 2];
-    save = { ...save, completed }; write(save);
+    if (leave) leave.onclick = () => {
+      const completed = save.completed.includes(2) ? save.completed : [...save.completed, 2];
+      save = { ...save, completed }; write(save);
+      screen="title"; render();
+    };
   }
 
   function winHidden2() {
     const completed = save.completed.includes(2) ? save.completed : [...save.completed, 2];
     const hiddenUnlocked = save.hiddenUnlocked.includes(2) ? save.hiddenUnlocked : [...save.hiddenUnlocked, 2];
-    save = { ...save, completed, hiddenUnlocked, unlocked: Math.max(save.unlocked, 3) };
+    save = { ...save, completed, hiddenUnlocked, unlocked: Math.max(save.unlocked, 3), ifCrew: true, ifC: false };
     write(save);
     app.innerHTML = `<div class="screen" style="background:#120e0c">
       <p class="kicker">隱藏關二</p>
       <h2 style="margin:1rem 0">白色西裝友</h2>
       <p class="muted">「呢三個 俾你管！」</p>
-      <p class="muted" style="margin-top:1rem">隱藏關二已解鎖。</p>
+      <p class="muted" style="margin-top:1rem">隱藏關二已解鎖。If「收服手下」已開。</p>
       <div class="grow"></div>
       <div class="stack">
         <button class="btn solid" id="next">下一關</button>
@@ -322,7 +334,8 @@ function startHidden2Combat() {
       const done = st.results[i];
       ctx.save();
       ctx.globalAlpha = done === "perfect" ? .25 : done === "miss" ? .4 : 1;
-      if (typeof drawContain === "function") drawContain(ctx, enemyFor("knife"), w*x, h*0.22, w*0.30, h*0.46);
+      const art = i === 2 ? (ART.c || ART.yeesa) : enemyFor("knife");
+      if (typeof drawContain === "function") drawContain(ctx, art, w*x, h*0.22, w*0.30, h*0.46);
       ctx.restore();
     });
     if (st.phase === "approach") {
