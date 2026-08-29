@@ -4,8 +4,8 @@ const CHAPTERS = [
     id: 1, numeral: "一", title: "後巷", subtitle: "拳頭", weapon: "fist",
     enemyCount: 1, blocksToKill: 3, onlyPerfect: false, blockLabel: "擋",
     windupMs: 900, hitMs: 1750, perfectStartMs: 980, perfectEndMs: 1460, buttonPx: 118,
-    intro: ["你仲年輕，氣盛。", "後巷有個惡徒，調戲緊個學生妹。", "第一拳揮出嚟喻陣，世界突然靜咗、慢咗。作出適當反應。"],
-    resolve: "惡徒一拳打嚟。你作出適當反應，人攤嗚地。學生妹仲企嗚後巷尾。",
+    intro: ["你仲年輕，氣盛。", "後巷有個惡徒，調戲緊個學生妹。", "你衝過去，打走個惡棍。", "點知！？時間好似突然慢咗落嚟！？"],
+    resolve: "惡徒一拳打嚟。你作出適當反應，人攤嗮地。學生妹仲企嗮後巷尾。",
     resolveIf: "惡徒倒下。後巷只淨低你同 Yeesa。雨未停。",
   },
   {
@@ -14,7 +14,7 @@ const CHAPTERS = [
     windupMs: 800, hitMs: 1500, perfectStartMs: 860, perfectEndMs: 1240, buttonPx: 104,
     intro: ["殺手組織。佢哋話，你天生就係做呢行。", "第一晚出糧。倉庫入面三把刀。", "作出適當反應。失手一次，就冊第二次。"],
     resolve: "倉庫三把刀。你逐個放低三個人。組織收咗你。",
-    resolveIf: "三個人倒下。你返到街上先想起後巷個 Yeesa。刀比拳頭快，人已經唔嗚度。",
+    resolveIf: "三個人倒下。你返到街上先想起後巷個 Yeesa。刀比拳頭快，人已經唔嗮度。",
   },
   {
     id: 3, numeral: "三", title: "任務", subtitle: "槍 · 殺手", weapon: "gun",
@@ -38,7 +38,7 @@ const CHAPTERS = [
     windupMs: 580, hitMs: 800, perfectStartMs: 440, perfectEndMs: 660, buttonPx: 66,
     intro: ["中年。手已經冊咁穩。", "時間越來越短。製越來越小。", "作出適當反應。"],
     resolve: "你過到。但你知，下一次會更短。",
-    resolveIf: "中年。有時你會嗚街口以為見到 Yeesa 個影。行近又唔係。",
+    resolveIf: "中年。有時你會嗮街口以為見到 Yeesa 個影。行近又唔係。",
   },
   {
     id: 6, numeral: "六", title: "刀再一次", subtitle: "刀 · 三人", weapon: "knife",
@@ -54,7 +54,7 @@ const CHAPTERS = [
     windupMs: 480, hitMs: 600, perfectStartMs: 320, perfectEndMs: 480, buttonPx: 50,
     intro: ["好老了。返返最初喻一拳。", "世界幾乎停唔到。", "你仲有冊喻一下。作出適當反應。"],
     resolve: "你擋到。或者，你一閃。時間從來冊停過。",
-    resolveIf: "最後一拳揮完，有人嗚後巷口望住你。你唔肯定係唔係 Yeesa。你只記得自己叫浩然。",
+    resolveIf: "最後一拳揮完，有人嗮後巷口望住你。你唔肯定係唔係 Yeesa。你只記得自己叫浩然。",
   },
 ];
 
