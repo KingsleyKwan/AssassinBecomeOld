@@ -249,7 +249,7 @@ function hiddenStage2B() {
   const lines = [
     { who: "白色西裝友", text: "「佢叫C。你隨便攞啦！」" },
     { who: "", text: "你行到出去。" },
-    { who: "C", text: "「大佬以為點叫你？」" },
+    { who: "C", text: "「大佬以後點叫你？」" },
     { who: "你", text: "「我叫⋯」" },
     { who: "C", text: "「食尾啦」" },
     { who: "", text: "C 攞住把刀快速刺向你⋯" },
