@@ -21,8 +21,10 @@ function pos(avoid) {
 function linesOf(raw) { return Array.isArray(raw) ? raw : [raw]; }
 function resolveLines() {
   const c = ch();
-  if (c.id === 2 && lastRun && lastRun.usedPerfect) {
-    return linesOf(save.ifGirl ? (c.resolveFlashIf || c.resolveIf) : (c.resolveFlash || c.resolve));
+  if (c.id === 2) {
+    const route = typeof ch2Route === "function" ? ch2Route() : "crew";
+    if (route === "c") return linesOf(save.ifGirl ? (c.resolveCIf || c.resolveC) : c.resolveC);
+    if (route === "flash") return linesOf(save.ifGirl ? (c.resolveFlashIf || c.resolveIf) : (c.resolveFlash || c.resolve));
   }
   return linesOf(save.ifGirl ? c.resolveIf : c.resolve);
 }
@@ -56,6 +58,8 @@ function render() {
   if (screen === "hidden") return hiddenStage();
   if (screen === "hidden2") return hiddenStage2();
   if (screen === "hidden2combat") return startHidden2Combat();
+  if (screen === "hidden2b") return hiddenStage2B();
+  if (screen === "hidden2bcombat") return startHidden2BCombat();
   if (screen === "ending") return ending();
 }
 
@@ -106,6 +110,8 @@ function howto() {
 
 const IF_OPTIONS = [
   { flag: "ifGirl", hiddenId: 1, label: "識到學生女", hint: "開著之後，後續關卡故事會變。" },
+  { flag: "ifCrew", hiddenId: 2, label: "收服手下", hint: "同「收服殺手C」不可同時開。" },
+  { flag: "ifC", hiddenId: 21, label: "收服殺手C", hint: "同「收服手下」不可同時開。" },
 ];
 
 function chapters() {
@@ -148,7 +154,14 @@ function chapters() {
   app.querySelector("#reset").onclick = () => persist({ ...defaultSave(), muted: save.muted, seenHowto: true });
   app.querySelector("#end").onclick = () => { if (endingOpen) { screen = "ending"; render(); } };
   app.querySelectorAll("[data-if-sw]").forEach(sw => {
-    sw.onclick = () => persist({ ...save, [sw.dataset.ifSw]: !save[sw.dataset.ifSw] });
+    sw.onclick = () => {
+      const flag = sw.dataset.ifSw;
+      const on = !save[flag];
+      const next = { ...save, [flag]: on };
+      if (on && flag === "ifCrew") next.ifC = false;
+      if (on && flag === "ifC") next.ifCrew = false;
+      persist(next);
+    };
   });
   app.querySelectorAll("[data-id]").forEach(b => b.onclick = () => play(+b.dataset.id));
   app.querySelectorAll("[data-hidden]").forEach(b => {
