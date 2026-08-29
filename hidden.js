@@ -1,10 +1,13 @@
 function resolveScreen() {
   const c = ch();
   const longMs = 10000;
+  const route = typeof ch2Route === "function" ? ch2Route() : "";
   const extra =
     (c.id === 1 && !save.hiddenUnlocked.includes(1))
       ? { at: 1800, len: 900, label: "睇吓條女有冊事", go: "hidden" }
-      : (c.id === 2 && lastRun && !lastRun.usedPerfect && !save.hiddenUnlocked.includes(2))
+      : (c.id === 2 && route === "c" && !save.hiddenUnlocked.includes(21))
+        ? { at: 1600, len: 1200, label: "出面條女我嘅！", go: "hidden2b" }
+      : (c.id === 2 && route === "crew" && !save.hiddenUnlocked.includes(2))
         ? { at: 1600, len: 1200, label: "我Train你啲𡃁啦～", go: "hidden2" }
         : null;
   const lines = resolveLines();
@@ -181,30 +184,15 @@ function hiddenStage() {
       setTimeout(() => showResult(kind, label), 650);
     }
     function showResult(kind, label) {
-      if (kind === "timeout") {
-        app.innerHTML = `<div class="screen" style="background:#161310">
-          <p class="kicker">過時</p>
-          <h2 style="margin:1rem 0 .4rem">唔講得切</h2>
-          <p class="muted">Yeesa 望住你一陣，然後轉身。</p>
-          <p class="muted" style="margin-top:1rem">隱藏關未解鎖。</p>
-          <div class="grow"></div>
-          <button class="btn solid" id="next">下一關</button>
-        </div>`;
-        app.querySelector("#next").onclick = () => leaveHiddenWithoutMeet();
-        return;
-      }
-      if (kind === "slap" || kind === "lame") {
+      if (kind === "timeout" || kind === "slap" || kind === "lame") {
         const slap = kind === "slap";
         app.innerHTML = `<div class="screen ${slap?"slapped":""}" style="background:${slap?"#2a1010":"#161310"}">
-          <p class="kicker">${slap?"拍":"……"}</p>
-          <p class="muted" style="margin-top:1rem">Yeesa「……好多謝你。」</p>
-          <h2 style="margin:.8rem 0 .4rem">你「${label}」</h2>
-          <p class="muted">${slap?"Yeesa 一拍車落塊面度。":"Yeesa 嘴拉實，眼神避開。好無奈。"}</p>
-          <p class="muted" style="margin-top:1rem">你行開。隱藏關未解鎖。</p>
+          <p class="kicker">${kind==="timeout"?"過時":slap?"拍":"……"}</p>
+          <h2 style="margin:.8rem 0 .4rem">${label ? "你「"+label+"」" : "唔講得切"}</h2>
+          <p class="muted">隱藏關未解鎖。</p>
           <div class="grow"></div>
           <button class="btn solid" id="next">下一關</button>
         </div>`;
-        if (slap) audio.beep(140,.2,"square",.16);
         app.querySelector("#next").onclick = () => leaveHiddenWithoutMeet();
         return;
       }
@@ -218,10 +206,8 @@ function hiddenStage() {
       write(save);
       app.innerHTML = `<div class="screen" style="background:#120e0c">
         <p class="kicker">後巷尾</p>
-        <p class="muted" style="margin-top:1rem">Yeesa「……好多謝你。」</p>
         <h2 style="margin:.8rem 0 .4rem">你「${label}」</h2>
         <p class="muted">Yeesa「……我叫 Yeesa。」</p>
-        <p class="muted" style="margin-top:1rem">佢記住你個名。隱藏關已解鎖。If「識到學生女」已開。</p>
         <div class="grow"></div>
         <div class="stack">
           <button class="btn solid" id="next">下一關</button>
@@ -257,6 +243,68 @@ function hiddenStage2() {
     };
   };
   paint();
+}
+
+function hiddenStage2B() {
+  const lines = [
+    { who: "白色西裝友", text: "「佢叫C。你隨便攞啦！」" },
+    { who: "", text: "你行到出去。" },
+    { who: "C", text: "「大佬以為點叫你？」" },
+    { who: "你", text: "「我叫⋯」" },
+    { who: "C", text: "「食尾啦」" },
+    { who: "", text: "C 攞住把刀快速刺向你⋯" },
+  ];
+  let i = 0;
+  const paint = () => {
+    app.innerHTML = `
+      <div class="screen" id="hs" style="background:#120e0c">
+        <p class="kicker">隱藏關 · 殺手 C</p>
+        <h2 style="margin:.6rem 0 1.2rem">${lines[i].who || " "}</h2>
+        <p class="muted" style="font-size:1.1rem">${lines[i].text}</p>
+        <div class="grow"></div>
+        <p class="muted">${i < lines.length-1 ? "輕觸繼續" : "開始"}</p>
+      </div>`;
+    app.querySelector("#hs").onclick = () => {
+      if (i < lines.length-1) { i++; paint(); return; }
+      screen = "hidden2bcombat"; render();
+    };
+  };
+  paint();
+}
+
+function finishHidden2B(killed) {
+  const completed = save.completed.includes(2) ? save.completed : [...save.completed, 2];
+  if (killed) {
+    save = { ...save, completed, unlocked: Math.max(save.unlocked, 3) };
+    write(save);
+    app.innerHTML = `<div class="screen" style="background:#120e0c">
+      <p class="kicker">隱藏關二B</p>
+      <h2 style="margin:1rem 0">白色西裝友</h2>
+      <p class="muted">「條女俾你殺咗喇嗚」</p>
+      <div class="grow"></div>
+      <div class="stack">
+        <button class="btn solid" id="next">下一關</button>
+        <button class="btn" id="list">關卡</button>
+      </div>
+    </div>`;
+  } else {
+    const hiddenUnlocked = save.hiddenUnlocked.includes(21) ? save.hiddenUnlocked : [...save.hiddenUnlocked, 21];
+    save = { ...save, completed, hiddenUnlocked, unlocked: Math.max(save.unlocked, 3), ifC: true, ifCrew: false };
+    write(save);
+    app.innerHTML = `<div class="screen" style="background:#120e0c">
+      <p class="kicker">隱藏關二B</p>
+      <h2 style="margin:1rem 0">C</h2>
+      <p class="muted">「哼！」</p>
+      <p class="muted" style="margin-top:1rem">隱藏關二B已解鎖。If「收服殺手C」已開。</p>
+      <div class="grow"></div>
+      <div class="stack">
+        <button class="btn solid" id="next">下一關</button>
+        <button class="btn" id="list">關卡</button>
+      </div>
+    </div>`;
+  }
+  app.querySelector("#next").onclick = () => play(3);
+  app.querySelector("#list").onclick = () => { screen="chapters"; render(); };
 }
 
 function ending() {
