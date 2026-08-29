@@ -5,6 +5,7 @@ let chapterId = 1;
 let storyMode = "intro";
 let combat = null;
 let raf = 0;
+let lastRun = null;
 
 function ch() { return CHAPTERS.find(c => c.id === chapterId); }
 function persist(next) { save = next; write(save); render(); }
@@ -20,6 +21,9 @@ function pos(avoid) {
 function linesOf(raw) { return Array.isArray(raw) ? raw : [raw]; }
 function resolveLines() {
   const c = ch();
+  if (c.id === 2 && lastRun && lastRun.usedPerfect) {
+    return linesOf(save.ifGirl ? (c.resolveFlashIf || c.resolveIf) : (c.resolveFlash || c.resolve));
+  }
   return linesOf(save.ifGirl ? c.resolveIf : c.resolve);
 }
 
@@ -50,6 +54,8 @@ function render() {
   if (screen === "combat") return startCombat();
   if (screen === "resolve") return resolveScreen();
   if (screen === "hidden") return hiddenStage();
+  if (screen === "hidden2") return hiddenStage2();
+  if (screen === "hidden2combat") return startHidden2Combat();
   if (screen === "ending") return ending();
 }
 
@@ -112,11 +118,12 @@ function chapters() {
       <div class="row" style="margin-top:.35rem"><strong>${locked?"———":c.title}</strong><span class="muted">${locked?"未開":done?"過關":"進入"}</span></div>
     </button>`;
   }).join("");
-  const hidden = save.hiddenUnlocked.includes(1) ? `
-    <button class="card" data-hidden="1">
+  const hidden = (typeof HIDDEN_LIST === "undefined" ? [] : HIDDEN_LIST)
+    .filter(h => save.hiddenUnlocked.includes(h.id))
+    .map(h => `<button class="card" data-hidden="${h.id}" data-hs="${h.screen}">
       <p class="kicker">隱藏關</p>
-      <div class="row" style="margin-top:.35rem"><strong>後巷尾</strong><span class="muted">進入</span></div>
-    </button>` : "";
+      <div class="row" style="margin-top:.35rem"><strong>${h.title}</strong><span class="muted">進入</span></div>
+    </button>`).join("");
   const openedIf = IF_OPTIONS.filter(o => save.hiddenUnlocked.includes(o.hiddenId));
   const ifCard = openedIf.length ? `
         <div class="card">
@@ -144,12 +151,13 @@ function chapters() {
     sw.onclick = () => persist({ ...save, [sw.dataset.ifSw]: !save[sw.dataset.ifSw] });
   });
   app.querySelectorAll("[data-id]").forEach(b => b.onclick = () => play(+b.dataset.id));
-  const h = app.querySelector("[data-hidden]");
-  if (h) h.onclick = () => { screen = "hidden"; render(); };
+  app.querySelectorAll("[data-hidden]").forEach(b => {
+    b.onclick = () => { screen = b.dataset.hs; render(); };
+  });
 }
 
 function play(id) {
-  chapterId = id; storyMode = "intro"; screen = "story"; render();
+  chapterId = id; storyMode = "intro"; lastRun = null; screen = "story"; render();
 }
 
 function story() {
