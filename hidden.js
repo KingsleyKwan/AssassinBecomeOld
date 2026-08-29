@@ -1,12 +1,16 @@
 function resolveScreen() {
   const c = ch();
   const longMs = 10000;
-  const showHidden = c.id === 1 && !save.hiddenUnlocked.includes(1);
+  const extra =
+    (c.id === 1 && !save.hiddenUnlocked.includes(1))
+      ? { at: 1800, len: 900, label: "睇吓條女有冊事", go: "hidden" }
+      : (c.id === 2 && lastRun && !lastRun.usedPerfect && !save.hiddenUnlocked.includes(2))
+        ? { at: 1600, len: 1200, label: "我Train你啲𡃁啦～", go: "hidden2" }
+        : null;
   const lines = resolveLines();
   const blurb = lines[lines.length - 1];
   let t0 = performance.now();
   let hiddenOn = false, hiddenGone = false;
-  const hiddenAt = 1800, hiddenLen = 900;
   app.innerHTML = `
     <div class="screen" style="background:#0a0908">
       <p class="kicker">過關</p>
@@ -20,17 +24,17 @@ function resolveScreen() {
     if (screen !== "resolve") return;
     const elapsed = now - t0;
     const nextLeft = Math.max(0, 1 - elapsed/longMs);
-    if (showHidden && !hiddenOn && !hiddenGone && elapsed >= hiddenAt && elapsed < hiddenAt+hiddenLen) {
+    if (extra && !hiddenOn && !hiddenGone && elapsed >= extra.at && elapsed < extra.at+extra.len) {
       hiddenOn = true;
       const p = pos();
       const b = document.createElement("button");
       b.className = "qte perfect";
-      b.textContent = "睇吓條女有冊事";
-      b.style.cssText = `left:${p.x}%;top:${p.y}%;width:min(72vw,240px);height:52px;border-radius:14px;font-size:.85rem`;
-      b.onclick = (e) => { e.stopPropagation(); screen = "hidden"; render(); };
+      b.textContent = extra.label;
+      b.style.cssText = `left:${p.x}%;top:${p.y}%;width:min(78vw,260px);height:52px;border-radius:14px;font-size:.82rem`;
+      b.onclick = (e) => { e.stopPropagation(); screen = extra.go; render(); };
       zone.appendChild(b);
     }
-    if (showHidden && hiddenOn && elapsed >= hiddenAt+hiddenLen) {
+    if (extra && hiddenOn && elapsed >= extra.at+extra.len) {
       hiddenOn = false; hiddenGone = true;
       zone.querySelector(".perfect")?.remove();
     }
@@ -229,6 +233,30 @@ function hiddenStage() {
     }
   }
   paintLine();
+}
+
+function hiddenStage2() {
+  const lines = [
+    { who: "你", text: "「我Train你啲𡃁啦～」" },
+    { who: "", text: "出面三隻看門狗聽到就發癲。" },
+    { who: "看門狗", text: "「你憑咩呀！」" },
+  ];
+  let i = 0;
+  const paint = () => {
+    app.innerHTML = `
+      <div class="screen" id="hs" style="background:#120e0c">
+        <p class="kicker">隱藏關 · 三隻狗</p>
+        <h2 style="margin:.6rem 0 1.2rem">${lines[i].who || " "}</h2>
+        <p class="muted" style="font-size:1.1rem">${lines[i].text}</p>
+        <div class="grow"></div>
+        <p class="muted">${i < lines.length-1 ? "輕觸繼續" : "開始"}</p>
+      </div>`;
+    app.querySelector("#hs").onclick = () => {
+      if (i < lines.length-1) { i++; paint(); return; }
+      screen = "hidden2combat"; render();
+    };
+  };
+  paint();
 }
 
 function ending() {
