@@ -17,6 +17,11 @@ function pos(avoid) {
   }
   return { x: 70, y: 36 };
 }
+function linesOf(raw) { return Array.isArray(raw) ? raw : [raw]; }
+function resolveLines() {
+  const c = ch();
+  return linesOf(save.ifGirl ? c.resolveIf : c.resolve);
+}
 
 const audio = {
   ctx: null,
@@ -150,7 +155,7 @@ function play(id) {
 function story() {
   const c = ch();
   const intro = storyMode === "intro";
-  const lines = intro ? c.intro : [save.ifGirl ? c.resolveIf : c.resolve];
+  const lines = intro ? linesOf(c.intro) : resolveLines();
   let i = 0;
   const paint = () => {
     app.innerHTML = `
