@@ -80,7 +80,7 @@ function howto() {
       <p class="kicker">說明</p>
       <h2 style="margin:1rem 0">作出適當反應</h2>
       <p class="muted">拳頭、刀接近喻陣，時間會慢。槍關係子彈飛近。</p>
-      <p class="muted" style="margin-top:1rem">畫面上會出現掻。作出適當反應。再等一吓，會有更短嘅窗口。</p>
+      <p class="muted" style="margin-top:1rem">畫面上會出現搔。作出適當反應。再等一吓，會有更短嘅窗口。</p>
       <p class="muted" style="margin-top:1rem">製出現嘅位置每次都唔同。失手一次，即死。</p>
       <p class="muted" style="margin-top:1rem">過關之後會有「下一關」。窗口好長，但唔撲就唔會解鎖。</p>
       <div class="grow"></div>
@@ -92,6 +92,10 @@ function howto() {
     if (first) play(1); else { screen = "title"; render(); }
   };
 }
+
+const IF_OPTIONS = [
+  { flag: "ifGirl", hiddenId: 1, label: "識到學生女", hint: "開著之後，後續關卡故事會變。" },
+];
 
 function chapters() {
   const endingOpen = save.unlocked >= 8 || save.completed.includes(7);
@@ -108,29 +112,32 @@ function chapters() {
       <p class="kicker">隱藏關</p>
       <div class="row" style="margin-top:.35rem"><strong>後巷尾</strong><span class="muted">進入</span></div>
     </button>` : "";
+  const openedIf = IF_OPTIONS.filter(o => save.hiddenUnlocked.includes(o.hiddenId));
+  const ifCard = openedIf.length ? `
+        <div class="card">
+          <p class="kicker">If</p>
+          ${openedIf.map(o => `
+          <div class="toggle" style="margin-top:.5rem" data-if="${o.flag}">
+            <span>${o.label}</span>
+            <button class="switch ${save[o.flag]?"on":""}" data-if-sw="${o.flag}"></button>
+          </div>
+          <p class="muted" style="margin-top:.45rem;font-size:.8rem">${o.hint}</p>`).join("")}
+        </div>` : "";
   app.innerHTML = `
     <div class="screen">
       <div class="row"><button class="btn" style="width:auto;padding:0 .6rem" id="back">返回</button><h2>關卡</h2><button class="btn" style="width:auto;padding:0 .6rem" id="reset">重置</button></div>
       <div class="list grow" style="margin-top:1rem">
         ${cards}${hidden}
         <button class="card" ${endingOpen?"":"disabled"} id="end"><p class="kicker">終章</p><strong>${endingOpen?"時間還在走":"———"}</strong></button>
-        <div class="card">
-          <p class="kicker">If</p>
-          <div class="toggle" style="margin-top:.5rem">
-            <span>識到學生女</span>
-            <button class="switch ${save.ifGirl?"on":""}" id="ifg" ${save.hiddenUnlocked.includes(1)?"":"disabled"}></button>
-          </div>
-          <p class="muted" style="margin-top:.45rem;font-size:.8rem">${save.hiddenUnlocked.includes(1)?"開著之後，後續關卡故事會變。":"隱藏關解鎖之後先用得。"}</p>
-        </div>
+        ${ifCard}
       </div>
     </div>`;
   app.querySelector("#back").onclick = () => { screen = "title"; render(); };
   app.querySelector("#reset").onclick = () => persist({ ...defaultSave(), muted: save.muted, seenHowto: true });
   app.querySelector("#end").onclick = () => { if (endingOpen) { screen = "ending"; render(); } };
-  app.querySelector("#ifg").onclick = () => {
-    if (!save.hiddenUnlocked.includes(1)) return;
-    persist({ ...save, ifGirl: !save.ifGirl });
-  };
+  app.querySelectorAll("[data-if-sw]").forEach(sw => {
+    sw.onclick = () => persist({ ...save, [sw.dataset.ifSw]: !save[sw.dataset.ifSw] });
+  });
   app.querySelectorAll("[data-id]").forEach(b => b.onclick = () => play(+b.dataset.id));
   const h = app.querySelector("[data-hidden]");
   if (h) h.onclick = () => { screen = "hidden"; render(); };
