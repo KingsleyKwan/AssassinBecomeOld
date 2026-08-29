@@ -13,8 +13,10 @@ const CHAPTERS = [
     enemyCount: 3, blocksToKill: 3, onlyPerfect: false, blockLabel: "擋",
     windupMs: 800, hitMs: 1500, perfectStartMs: 860, perfectEndMs: 1240, buttonPx: 104,
     intro: ["上次件事，有個殺手組織嘅人見到。", "佢哋話：「你注定做呢行。」", "第一單。毒品倉庫。三隻持刀看門狗。"],
-    resolve: ["搞掂三隻狗。入到去無毒品。", "有個白西裝 All back 男人坐咗嚟度。", "佢同你講：「你！跟我搵食！」"],
-    resolveIf: ["搞掂三隻狗。入到去無毒品。", "有個白西裝 All back 男人坐咗嚟度。", "佢同你講：「你！跟我搵食！」", "你忽然想起後巷個 Yeesa。"],
+    resolve: ["打暈咗三隻看門狗。入到去無毒品。", "有個白西裝 All back 男人坐咗嚟度。", "佢同你講：「你！跟我搵食！」"],
+    resolveIf: ["打暈咗三隻看門狗。入到去無毒品。", "有個白西裝 All back 男人坐咗嚟度。", "佢同你講：「你！跟我搵食！」", "你忽然想起後巷個 Yeesa。"],
+    resolveFlash: ["三隻狗倒低。入到去無毒品。", "白西裝 All back 男人坐住。", "「跟我。」"],
+    resolveFlashIf: ["三隻狗倒低。入到去無毒品。", "白西裝 All back 男人坐住。", "「跟我。」", "你忽然想起後巷個 Yeesa。"],
   },
   {
     id: 3, numeral: "三", title: "任務", subtitle: "槍 · 殺手", weapon: "gun",
@@ -56,6 +58,11 @@ const CHAPTERS = [
     resolve: "你擋到。或者，你一閃。時間從來冊停過。",
     resolveIf: "最後一拳揮完，有人嗮後巷口望住你。你唔肯定係唔係 Yeesa。你只記得自己叫浩然。",
   },
+];
+
+const HIDDEN_LIST = [
+  { id: 1, title: "後巷尾", screen: "hidden" },
+  { id: 2, title: "三隻狗", screen: "hidden2" },
 ];
 
 const defaultSave = () => ({
