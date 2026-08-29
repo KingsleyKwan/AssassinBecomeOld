@@ -1,4 +1,4 @@
-const ART_KEYS = ["alley","warehouse","night","hq","thug","knifeman","gunman","fist","knife","bullet","yeesa"];
+const ART_KEYS = ["alley","warehouse","night","hq","thug","knifeman","gunman","fist","knife","bullet","yeesa","c"];
 const ART_SRC = Object.fromEntries(ART_KEYS.map((k) => [k, "art/" + k + ".svg"]));
 const ART = {};
 
@@ -24,12 +24,14 @@ function drawContain(ctx, img, x, y, w, h) {
 }
 function sceneKey(id) {
   if (id === 1 || id === 7) return "alley";
-  if (id === 2 || id === 6) return "warehouse";
+  if (id === 2 || id === 6 || id === 21) return "warehouse";
   if (id === 4) return "hq";
   return "night";
 }
 function bgFor(id) { return ART[sceneKey(id)]; }
-function enemyFor(weapon) {
+function enemyFor(weapon, idx, spec) {
+  if (spec && spec.female) return ART.c || ART.yeesa;
+  if ((spec && spec.id === 2 || (!spec && chapterId === 2)) && idx === 2) return ART.c || ART.yeesa;
   if (weapon === "knife") return ART.knifeman;
   if (weapon === "gun") return ART.gunman;
   return ART.thug;
@@ -41,4 +43,11 @@ function threatFor(weapon) {
 }
 function screenBg(key) {
   return "background:#0a0908 url('" + (ART_SRC[key] || ART_SRC.alley) + "') center/cover no-repeat";
+}
+function ch2Route() {
+  const k = lastRun && lastRun.kills;
+  if (k && k[0] === "perfect" && k[1] === "perfect" && k[2] === "block") return "c";
+  if (lastRun && !lastRun.usedPerfect) return "crew";
+  if (lastRun && lastRun.usedPerfect) return "flash";
+  return "crew";
 }
