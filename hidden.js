@@ -2,6 +2,8 @@ function resolveScreen() {
   const c = ch();
   const longMs = 10000;
   const showHidden = c.id === 1 && !save.hiddenUnlocked.includes(1);
+  const lines = resolveLines();
+  const blurb = lines[lines.length - 1];
   let t0 = performance.now();
   let hiddenOn = false, hiddenGone = false;
   const hiddenAt = 1800, hiddenLen = 900;
@@ -9,7 +11,7 @@ function resolveScreen() {
     <div class="screen" style="background:#0a0908">
       <p class="kicker">過關</p>
       <h2 style="margin:.6rem 0 1rem">${c.title}</h2>
-      <p class="muted">${save.ifGirl ? c.resolveIf : c.resolve}</p>
+      <p class="muted">${blurb}</p>
       <div class="grow"></div>
       <div id="zone" style="position:relative;height:46vh"></div>
     </div>`;
