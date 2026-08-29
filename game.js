@@ -1,3 +1,4 @@
+const GAME_VERSION = "0.4.0";
 const app = document.getElementById("app");
 let save = load();
 let screen = "title";
@@ -66,7 +67,7 @@ function render() {
 function title() {
   app.innerHTML = `
     <div class="screen" style="background:radial-gradient(ellipse at 30% 20%,#3a2018,transparent 50%),#0a0908">
-      <div class="row"><button class="btn" style="width:auto;padding:0 .8rem" id="mute">${save.muted?"靜音":"音效"}</button></div>
+      <div class="row"><button class="btn" style="width:auto;padding:0 .8rem" id="mute">${save.muted?"靜音":"音效"}</button><p class="muted" style="letter-spacing:.16em;font-size:.72rem">ver ${GAME_VERSION}</p></div>
       <div class="grow" style="display:flex;flex-direction:column;justify-content:center">
         <p class="kicker">THE LAST FLASH</p>
         <h1>一閃</h1>
