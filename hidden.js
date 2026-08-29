@@ -79,6 +79,14 @@ function advance() {
   play(chapterId + 1);
 }
 
+function leaveHiddenWithoutMeet() {
+  chapterId = 1;
+  const completed = save.completed.includes(1) ? save.completed : [...save.completed, 1];
+  save = { ...save, completed, unlocked: Math.max(save.unlocked, 2) };
+  write(save);
+  play(2);
+}
+
 function hiddenStage() {
   const lines = [
     { who: "Yeesa", text: "……好多謝你。" },
@@ -143,25 +151,18 @@ function hiddenStage() {
     function pick(kind) {
       answered = true;
       clearInterval(iv);
-      if (kind === "slap") {
-        app.innerHTML = `<div class="screen slapped" style="background:#2a1010">
-          <p class="kicker">拍</p><h2 style="margin:1rem 0">一巴掌</h2>
-          <p class="muted">Yeesa 一拍車落塊面度。</p>
+      if (kind === "slap" || kind === "lame") {
+        const slap = kind === "slap";
+        app.innerHTML = `<div class="screen ${slap?"slapped":""}" style="background:${slap?"#2a1010":"#161310"}">
+          <p class="kicker">${slap?"拍":"……"}</p>
+          <h2 style="margin:1rem 0">${slap?"一巴掌":"無奈"}</h2>
+          <p class="muted">${slap?"Yeesa 一拍車落塊面度。":"Yeesa 嘴拉實，眼神避開。好無奈。"}</p>
+          <p class="muted" style="margin-top:1rem">你行開。隱藏關未解鎖。</p>
           <div class="grow"></div>
-          <button class="btn solid" id="again">再試</button>
+          <button class="btn solid" id="next">下一關</button>
         </div>`;
-        audio.beep(140,.2,"square",.16);
-        app.querySelector("#again").onclick = () => hiddenStage();
-        return;
-      }
-      if (kind === "lame") {
-        app.innerHTML = `<div class="screen" style="background:#161310">
-          <p class="kicker">……</p><h2 style="margin:1rem 0">無奈</h2>
-          <p class="muted">Yeesa 嘴拉實，眼神避開。好無奈。</p>
-          <div class="grow"></div>
-          <button class="btn solid" id="again">再試</button>
-        </div>`;
-        app.querySelector("#again").onclick = () => hiddenStage();
+        if (slap) audio.beep(140,.2,"square",.16);
+        app.querySelector("#next").onclick = () => leaveHiddenWithoutMeet();
         return;
       }
       save = {
