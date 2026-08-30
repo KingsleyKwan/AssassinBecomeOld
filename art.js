@@ -1,4 +1,4 @@
-const ART_KEYS = ["alley","warehouse","night","hq","thug","knifeman","gunman","fist","knife","bullet","yeesa","c"];
+const ART_KEYS = ["alley","warehouse","night","hq","thug","knifeman","gunman","fist","knife","bullet","yeesa","c","oldself"];
 const ART_SRC = Object.fromEntries(ART_KEYS.map((k) => [k, "art/" + k + ".svg"]));
 const ART = {};
 
@@ -30,8 +30,10 @@ function sceneKey(id) {
 }
 function bgFor(id) { return ART[sceneKey(id)]; }
 function enemyFor(weapon, idx, spec) {
+  const id = (spec && spec.id) || (typeof chapterId !== "undefined" ? chapterId : 0);
   if (spec && spec.female) return ART.c || ART.yeesa;
   if ((spec && spec.id === 2 || (!spec && chapterId === 2)) && idx === 2) return ART.c || ART.yeesa;
+  if (id === 5) return ART.oldself || ART.gunman;
   if (weapon === "knife") return ART.knifeman;
   if (weapon === "gun") return ART.gunman;
   return ART.thug;
