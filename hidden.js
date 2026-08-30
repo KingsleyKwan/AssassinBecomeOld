@@ -8,7 +8,7 @@ function resolveScreen() {
       : (c.id === 2 && route === "c" && !save.hiddenUnlocked.includes(21))
         ? { at: 1600, len: 1200, label: "出面條女我嘅！", go: "hidden2b" }
       : (c.id === 2 && route === "crew" && !save.hiddenUnlocked.includes(2))
-        ? { at: 1600, len: 1200, label: "我Train你啲𡃁啦～", go: "hidden2" }
+        ? { at: 1600, len: 1200, label: "我Train你啲𡳁啦～", go: "hidden2" }
         : null;
   const lines = resolveLines();
   const blurb = lines[lines.length - 1];
@@ -186,10 +186,11 @@ function hiddenStage() {
     function showResult(kind, label) {
       if (kind === "timeout" || kind === "slap" || kind === "lame") {
         const slap = kind === "slap";
+        const failLine = kind === "timeout" ? "你怕羞到咩都無講到 就走咗" : "隱藏關未解鎖。";
         app.innerHTML = `<div class="screen ${slap?"slapped":""}" style="background:${slap?"#2a1010":"#161310"}">
           <p class="kicker">${kind==="timeout"?"過時":slap?"拍":"……"}</p>
           <h2 style="margin:.8rem 0 .4rem">${label ? "你「"+label+"」" : "唔講得切"}</h2>
-          <p class="muted">隱藏關未解鎖。</p>
+          <p class="muted">${failLine}</p>
           <div class="grow"></div>
           <button class="btn solid" id="next">下一關</button>
         </div>`;
@@ -223,8 +224,8 @@ function hiddenStage() {
 
 function hiddenStage2() {
   const lines = [
-    { who: "你", text: "「我Train你啲𡃁啦～」" },
-    { who: "", text: "出面三隻看門狗聽到就發癲。" },
+    { who: "你", text: "「我Train你啲𡳁啦～」" },
+    { who: "", text: "出面三隻看門狗聽到就發癡。" },
     { who: "看門狗", text: "「你憑咩呀！」" },
   ];
   let i = 0;
@@ -247,12 +248,12 @@ function hiddenStage2() {
 
 function hiddenStage2B() {
   const lines = [
-    { who: "白色西裝友", text: "「佢叫C。你隨便攞啦！」" },
+    { who: "白色西裝友", text: "「佢叫C。你隨便攜啦！」" },
     { who: "", text: "你行到出去。" },
     { who: "C", text: "「大佬以後點叫你？」" },
     { who: "你", text: "「我叫⋯」" },
     { who: "C", text: "「食尾啦」" },
-    { who: "", text: "C 攞住把刀快速刺向你⋯" },
+    { who: "", text: "C 攜住把刀快速刺向你⋯" },
   ];
   let i = 0;
   const paint = () => {
@@ -280,7 +281,7 @@ function finishHidden2B(killed) {
     app.innerHTML = `<div class="screen" style="background:#120e0c">
       <p class="kicker">隱藏關二B</p>
       <h2 style="margin:1rem 0">白色西裝友</h2>
-      <p class="muted">「條女俾你殺咗喇嗚」</p>
+      <p class="muted">「條女俾你殺咗喎喔」</p>
       <div class="grow"></div>
       <div class="stack">
         <button class="btn solid" id="next">下一關</button>
