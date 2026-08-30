@@ -4,7 +4,7 @@ const CHAPTERS = [
     id: 1, numeral: "一", title: "後巷", subtitle: "拳頭", weapon: "fist",
     enemyCount: 1, blocksToKill: 3, onlyPerfect: false, blockLabel: "擋",
     windupMs: 900, hitMs: 1750, perfectStartMs: 980, perfectEndMs: 1460, buttonPx: 118,
-    intro: ["想當年 年少無知⋯", "見到後巷有個惡棍，調戲緊個學生妹。學生妹好驚", "你衝過去請住打走個惡棍。", "惡棍：「阻人扑⋯」"],
+    intro: ["想當年 年少無知⋯", "見到後巷有個惡棍，調戲緊個學生妹。學生妹好驚", "你衝過去談住打走個惡棍。", "惡棍：「阻人扑⋯」"],
     resolve: "惡徒一拳打嚼。你作出適當反應，人攤單地。學生妹仲企單後巷尾。",
     resolveIf: "惡徒倒下。後巷只淨低你同 Yeesa。雨未停。",
   },
