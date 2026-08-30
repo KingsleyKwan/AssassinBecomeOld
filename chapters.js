@@ -4,8 +4,8 @@ const CHAPTERS = [
     id: 1, numeral: "一", title: "後巷", subtitle: "拳頭", weapon: "fist",
     enemyCount: 1, blocksToKill: 3, onlyPerfect: false, blockLabel: "擋",
     windupMs: 900, hitMs: 1750, perfectStartMs: 980, perfectEndMs: 1460, buttonPx: 118,
-    intro: ["你仲年輕，氣盛。", "後巷有個惡徒，調戲緊個學生妹。", "你衝過去，打走個惡棍。", "點知！？時間好似突然慢咗落嚟！？"],
-    resolve: "惡徒一拳打嚟。你作出適當反應，人攤嗮地。學生妹仲企嗮後巷尾。",
+    intro: ["想當年 年少無知⋯", "見到後巷有個惡棍，調戲緊個學生妹。學生妹好驚", "你衝過去請住打走個惡棍。", "惡棍：「阻人扑⋯」"],
+    resolve: "惡徒一拳打嚼。你作出適當反應，人攤單地。學生妹仲企單後巷尾。",
     resolveIf: "惡徒倒下。後巷只淨低你同 Yeesa。雨未停。",
   },
   {
@@ -13,10 +13,10 @@ const CHAPTERS = [
     enemyCount: 3, blocksToKill: 3, onlyPerfect: false, blockLabel: "擋",
     windupMs: 800, hitMs: 1500, perfectStartMs: 860, perfectEndMs: 1240, buttonPx: 104,
     intro: ["上次件事，有個殺手組織嘅人見到。", "佢哋話：「你注定做呢行。」", "第一單。毒品倉庫。兩隻持刀看門狗，同一個女人。"],
-    resolve: ["打暈咗三隻看門狗。入到去無毒品。", "有個白西裝 All back 男人坐咗嚟度。", "佢同你講：「你！跟我搵食！」"],
-    resolveIf: ["打暈咗三隻看門狗。入到去無毒品。", "有個白西裝 All back 男人坐咗嚟度。", "佢同你講：「你！跟我搵食！」", "你忽然想起後巷個 Yeesa。"],
-    resolveC: ["入到去，無毒品。", "有個白色西裝 All back 男人坐咗嚟度。", "佢同你講：「你！跟我搵食！」"],
-    resolveCIf: ["入到去，無毒品。", "有個白色西裝 All back 男人坐咗嚟度。", "佢同你講：「你！跟我搵食！」", "你忽然想起後巷個 Yeesa。"],
+    resolve: ["打暈咗三隻看門狗。入到去無毒品。", "有個白西裝 All back 男人坐咗嚼度。", "佢同你講：「你！跟我揪食！」"],
+    resolveIf: ["打暈咗三隻看門狗。入到去無毒品。", "有個白西裝 All back 男人坐咗嚼度。", "佢同你講：「你！跟我揪食！」", "你忽然想起後巷個 Yeesa。"],
+    resolveC: ["入到去，無毒品。", "有個白色西裝 All back 男人坐咗嚼度。", "佢同你講：「你！跟我揪食！」"],
+    resolveCIf: ["入到去，無毒品。", "有個白色西裝 All back 男人坐咗嚼度。", "佢同你講：「你！跟我揪食！」", "你忽然想起後巷個 Yeesa。"],
     resolveFlash: ["三隻狗倒低。入到去無毒品。", "白西裝 All back 男人坐住。", "「跟我。」"],
     resolveFlashIf: ["三隻狗倒低。入到去無毒品。", "白西裝 All back 男人坐住。", "「跟我。」", "你忽然想起後巷個 Yeesa。"],
   },
@@ -42,7 +42,7 @@ const CHAPTERS = [
     windupMs: 580, hitMs: 800, perfectStartMs: 440, perfectEndMs: 660, buttonPx: 66,
     intro: ["中年。手已經冊咁穩。", "時間越來越短。製越來越小。", "作出適當反應。"],
     resolve: "你過到。但你知，下一次會更短。",
-    resolveIf: "中年。有時你會嗮街口以為見到 Yeesa 個影。行近又唔係。",
+    resolveIf: "中年。有時你會單街口以為見到 Yeesa 個影。行近又唔係。",
   },
   {
     id: 6, numeral: "六", title: "刀再一次", subtitle: "刀 · 三人", weapon: "knife",
@@ -58,7 +58,7 @@ const CHAPTERS = [
     windupMs: 480, hitMs: 600, perfectStartMs: 320, perfectEndMs: 480, buttonPx: 50,
     intro: ["好老了。返返最初喻一拳。", "世界幾乎停唔到。", "你仲有冊喻一下。作出適當反應。"],
     resolve: "你擋到。或者，你一閃。時間從來冊停過。",
-    resolveIf: "最後一拳揮完，有人嗮後巷口望住你。你唔肯定係唔係 Yeesa。你只記得自己叫浩然。",
+    resolveIf: "最後一拳揮完，有人單後巷口望住你。你唔肯定係唔係 Yeesa。你只記得自己叫浩然。",
   },
 ];
 
