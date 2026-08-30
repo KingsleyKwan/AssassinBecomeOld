@@ -49,6 +49,7 @@ const CHAPTERS = [
     resolveIf: "敵人倒下。意外發現入面有文件📄有Yeesa幅相！？",
     resolveOrg: "敵人倒下。談住調查一下。點知發現入面有文件📄有「⋯加油」字句。",
     resolveGirlCBad: "敵人倒下。見到有文件📄有Yeesa幅相。C：「如果再查落去⋯你會有事⋯」",
+    lose: ["你 瞄低咗"],
   },
   {
     id: 5, numeral: "五", title: "中年", subtitle: "槍", weapon: "gun",
