@@ -31,12 +31,24 @@ const CHAPTERS = [
     resolveIf: "槍響之後你先驚：如果後巷喻晚你慢咗半拍，倒低嘅就唔係惡徒。",
   },
   {
-    id: 4, numeral: "四", title: "敵營", subtitle: "槍 · 五人", weapon: "gun",
-    enemyCount: 5, blocksToKill: 1, onlyPerfect: true, blockLabel: "閃",
-    windupMs: 640, hitMs: 980, perfectStartMs: 540, perfectEndMs: 800, buttonPx: 78,
-    intro: ["衝入去。敵人大本營。", "五個人。作出適當反應，放低一個。", "唔可以失手。"],
-    resolve: "五個人。一閃一次，放低一個。敵營倒下，手仲穩。",
-    resolveIf: "你數住五個人倒下。忽然覺得 Yeesa 唔應該知你今晚做過啲咩。",
+    id: 4, numeral: "四", title: "敵營", subtitle: "拳／刀／槍", weapon: "fist",
+    enemyCount: 5, blocksToKill: 3, onlyPerfect: false, blockLabel: "擋",
+    windupMs: 820, hitMs: 1500, perfectStartMs: 880, perfectEndMs: 1280, buttonPx: 110,
+    waves: [
+      { weapon: "fist",  blocksToKill: 3, onlyPerfect: false, blockLabel: "擋", windupMs: 820, hitMs: 1500, perfectStartMs: 880, perfectEndMs: 1280, buttonPx: 110 },
+      { weapon: "fist",  blocksToKill: 3, onlyPerfect: false, blockLabel: "擋", windupMs: 820, hitMs: 1500, perfectStartMs: 880, perfectEndMs: 1280, buttonPx: 110 },
+      { weapon: "knife", blocksToKill: 3, onlyPerfect: false, blockLabel: "擋", windupMs: 720, hitMs: 1180, perfectStartMs: 760, perfectEndMs: 1040, buttonPx: 92 },
+      { weapon: "knife", blocksToKill: 3, onlyPerfect: false, blockLabel: "擋", windupMs: 720, hitMs: 1180, perfectStartMs: 760, perfectEndMs: 1040, buttonPx: 92 },
+      { weapon: "gun",   blocksToKill: 1, onlyPerfect: true,  blockLabel: "閃", windupMs: 700, hitMs: 1080, perfectStartMs: 600, perfectEndMs: 880, buttonPx: 86 }
+    ],
+    intro: ["又過咗一段時間。組織話，呢個組織 唔留得。叫我殺人敵人大本營。"],
+    introCrew: "我帶住手下衝入去。為咗快啲完成任務。",
+    introC: "我帶住C衝入去。",
+    introCBad: "我帶住疑惑衝入去。C：「唔好談咁多先！」",
+    resolve: "五個人倒下。敵營靜咗。",
+    resolveIf: "敵人倒下。意外發現入面有文件📄有Yeesa幅相！？",
+    resolveOrg: "敵人倒下。談住調查一下。點知發現入面有文件📄有「⋯加油」字句。",
+    resolveGirlCBad: "敵人倒下。見到有文件📄有Yeesa幅相。C：「如果再查落去⋯你會有事⋯」",
   },
   {
     id: 5, numeral: "五", title: "中年", subtitle: "槍", weapon: "gun",
@@ -78,6 +90,7 @@ const defaultSave = () => ({
   ifGirl: false,
   ifCrew: false,
   ifC: false,
+  ifOrgBad: false,
   seenHowto: false,
   muted: false,
 });
