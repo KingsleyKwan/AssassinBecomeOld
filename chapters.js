@@ -22,10 +22,12 @@ const CHAPTERS = [
   },
   {
     id: 3, numeral: "三", title: "任務", subtitle: "槍 · 殺手", weapon: "gun",
-    enemyCount: 1, blocksToKill: 1, onlyPerfect: true, blockLabel: "閃",
+    enemyCount: 6, blocksToKill: 1, onlyPerfect: true, blockLabel: "閃",
     windupMs: 700, hitMs: 1080, perfectStartMs: 600, perfectEndMs: 880, buttonPx: 86,
-    intro: ["組織落命令。目標係另一個殺手。", "第一次用槍。子彈比拳頭更快。", "作出適當反應。只有最準喻一下，先至殺到佢。"],
-    resolve: "槍響。只有最準喻一下先殺到。任務完成。",
+    intro: ["一段日子之後。突然收到組織order：殺個二五仔殺手", "對付槍，要反應更快。", "個殺手支槍得6飛子彈⋯"],
+    introIf: ["一段日子之後。同Yeesa行緊街嘅時候，收到組織order：殺個二五仔殺手", "對付槍，要反應更快。", "個殺手支槍得6飛子彈⋯"],
+    lose: ["子彈穿過身體⋯⋯"],
+    resolve: "槍響。只有最準嘅一下先殺到。任務完成。",
     resolveIf: "槍響之後你先驚：如果後巷喻晚你慢咗半拍，倒低嘅就唔係惡徒。",
   },
   {
